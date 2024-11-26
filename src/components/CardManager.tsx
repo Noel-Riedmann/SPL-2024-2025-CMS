@@ -2,8 +2,8 @@ import Card from "./Card";
 
 export default function CardManager() {
   return (
-    <div className="bg-black w-screen h-full p-10">
-      <h1 className="text-white">HTL Dornbirn 5bWI</h1>
+    <div className="bg-lime-950 w-screen h-full p-24">
+      <h1 className="text-white text-right text-4xl font-mono m-10">HTL Dornbirn 5bWI</h1>
       <div className="grid gap-4 grid-cols-[repeat(auto-fill,_minmax(16rem,_1fr))]">
         <Card
           imageUrl="https://picsum.photos/200/200"
