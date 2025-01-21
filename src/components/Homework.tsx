@@ -8,32 +8,88 @@ const supabase = createClient(
 );
 
 export default function Homework() {
-  const [homeworks, setHomeworks] = useState<any[]>([]); 
+  const [homeworks, setHomeworks] = useState<any[]>([]);
+  const [newHomework, setNewHomework] = useState({
+    subject: "",
+    topic: "",
+    description: "",
+  });
 
-  // Fetch homeworks from Supabase
   async function getHomeworks() {
     try {
       const { data, error } = await supabase.from("homeworks").select("*");
       if (error) throw error;
-      setHomeworks(data || []); 
-      console.log(data);
-      
+      setHomeworks(data || []);
     } catch (error) {
       console.error("Error fetching homeworks:", error);
     }
   }
 
+  async function addHomework(event: React.FormEvent) {
+    event.preventDefault();
+    try {
+      const { data, error } = await supabase.from("homeworks").insert([newHomework]);
+      if (error) throw error;
+      setHomeworks((prev) => [...prev, ...data]);
+      setNewHomework({ subject: "", topic: "", description: "" });
+    } catch (error) {
+      console.error("Error adding homework:", error);
+    }
+  }
+
   useEffect(() => {
-    getHomeworks(); 
+    getHomeworks();
   }, []);
 
   return (
-    <ul>
-      {homeworks.map((homework, index) => (
-        <li key={index}>
-          <strong>{homework.subject}</strong>: {homework.topic} - {homework.description}
-        </li>
-      ))}
-    </ul>
+    <div className="p-6 max-w-4xl mx-auto">
+      <h1 className="text-2xl font-bold mb-4">Homework List</h1>
+      <form onSubmit={addHomework} className="mb-6">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <input
+            type="text"
+            placeholder="Subject"
+            value={newHomework.subject}
+            onChange={(e) => setNewHomework({ ...newHomework, subject: e.target.value })}
+            className="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+          <input
+            type="text"
+            placeholder="Topic"
+            value={newHomework.topic}
+            onChange={(e) => setNewHomework({ ...newHomework, topic: e.target.value })}
+            className="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+          <input
+            type="text"
+            placeholder="Description"
+            value={newHomework.description}
+            onChange={(e) => setNewHomework({ ...newHomework, description: e.target.value })}
+            className="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
+        <button
+          type="submit"
+          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          Add Homework
+        </button>
+      </form>
+      <ul className="space-y-4">
+        {homeworks.map((homework, index) => (
+          <li
+            key={index}
+            className="p-4 border rounded-md shadow-sm hover:shadow-md transition-shadow"
+          >
+            <strong className="block text-lg">{homework.subject}</strong>
+            <span className="block text-sm text-gray-600">{homework.topic}</span>
+            <p className="text-gray-800">{homework.description}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
