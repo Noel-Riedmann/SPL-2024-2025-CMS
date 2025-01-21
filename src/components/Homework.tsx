@@ -28,14 +28,23 @@ export default function Homework() {
   async function addHomework(event: React.FormEvent) {
     event.preventDefault();
     try {
-      const { data, error } = await supabase.from("homeworks").insert([newHomework]);
+      const { data, error } = await supabase
+        .from("homeworks")
+        .insert([newHomework])
+        .select("*"); 
+  
       if (error) throw error;
-      setHomeworks((prev) => [...prev, ...data]);
+  
+      if (data) {
+        setHomeworks((prev) => [...prev, ...data]);
+      }
+  
       setNewHomework({ subject: "", topic: "", description: "" });
     } catch (error) {
       console.error("Error adding homework:", error);
     }
   }
+  
 
   useEffect(() => {
     getHomeworks();

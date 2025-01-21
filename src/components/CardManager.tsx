@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Card from "./Card";
+import { Person } from "../utils/types";
 
 export default function CardManager() {
   const [people, setPeople] = useState([]);
@@ -25,8 +26,8 @@ export default function CardManager() {
       </h1>
       <div className="grid gap-4 grid-cols-[repeat(auto-fill,_minmax(16rem,_1fr))]">
         {people.length > 0 ? (
-          people.map((person) => {
-            console.log(person.image);  // Log the image ID or any other data
+          people.map((person:Person) => {
+            console.log(person);  // Log the image ID or any other data
             return (
               <Card
                 key={person.id}
